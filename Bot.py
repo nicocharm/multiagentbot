@@ -2,18 +2,15 @@ import requests
 import json
 from groq import Groq
 import os
-from dotenv import load_dotenv
 from SimpleAgent import SimpleAgent
 from bs4 import BeautifulSoup
 import re
-import copy
 from datetime import datetime
 from flask import Flask, request, redirect
 import telebot
 import threading
 import time
 import ast
-load_dotenv()  # This loads the variables from .env into the environment
 
 # Your Spotify app credentials
 client_id = os.getenv('SPOTIFY_CLIENT_ID')
