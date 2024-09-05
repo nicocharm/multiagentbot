@@ -16,14 +16,9 @@ import ast
 client_id = os.getenv('SPOTIFY_CLIENT_ID')
 client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
 
-def get_ngrok_url():
-    response = requests.get("http://127.0.0.1:4040/api/tunnels")
-    data = response.json()
-    public_url = data['tunnels'][0]['public_url']
-    return public_url
+base_uri = "https://multi-agent-bot.onrender.com"
 
-redirect_uri = f'{get_ngrok_url()}/callback'
-print(redirect_uri)
+redirect_uri = f'{base_uri}/callback'
 
 groq_api_key = os.getenv('GROQ_API_KEY')
 TELEGRAM_API_KEY = os.getenv('TELEGRAM_API_KEY')
@@ -772,7 +767,7 @@ def handle_message(message):
             agent = SimpleAgent(groq_api_key, system)
 
             # Example usage
-            ngrok_url = get_ngrok_url() + f"/?chat_id={telegram_chat_id}"
+            ngrok_url = base_uri + f"/?chat_id={telegram_chat_id}"
             
             prompt = f"""USER PROMPT: {user_prompt}\nSPOTIFY AUTH URL: {ngrok_url}"""
             response = agent.run(prompt)
@@ -804,7 +799,7 @@ def start_telegram_bot():
 if __name__ == '__main__':
     user_data = load_user_data()
     threading.Thread(target=start_telegram_bot).start()
-    app.run(host='127.0.0.1', port=3000)  # Ensure this matches the port in your Glitch redirect URI
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 3000)))  # Ensure this matches the port in your Glitch redirect URI
 
     # Wait for the access_token to be set
     while access_token is None:
